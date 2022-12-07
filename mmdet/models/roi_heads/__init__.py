@@ -22,12 +22,10 @@ from .sparse_roi_head import SparseRoIHead
 from .standard_roi_head import StandardRoIHead
 from .trident_roi_head import TridentRoIHead
 from .adamixer_decoder import AdaMixerDecoder
-from .adamixer_decoder_aq import AdaMixerDecoder_aq
-from .adamixer_decoder_caq import AdaMixerDecoder_caq
-from .adamixer_decoder_aql import AdaMixerDecoder_aql
+
 from .adamixer_decoder_Qrecycle import AdaMixerDecoder_Qrecycle
 from .adamixer_decoder_Qrecycle_optimize import AdaMixerDecoder_Qrecycle_optimize
-from .adamixer_decoder_stodepth import AdaMixerDecoder_stodepth
+
 __all__ = [
     'BaseRoIHead', 'CascadeRoIHead', 'DoubleHeadRoIHead', 'MaskScoringRoIHead',
     'HybridTaskCascadeRoIHead', 'GridRoIHead', 'ResLayer', 'BBoxHead',
@@ -38,6 +36,6 @@ __all__ = [
     'SingleRoIExtractor', 'PISARoIHead', 'PointRendRoIHead', 'MaskPointHead',
     'CoarseMaskHead', 'DynamicRoIHead', 'SparseRoIHead', 'TridentRoIHead',
     'SCNetRoIHead', 'SCNetMaskHead', 'SCNetSemanticHead', 'SCNetBBoxHead',
-    'FeatureRelayHead', 'GlobalContextHead', 'AdaMixerDecoder_aq', 'AdaMixerDecoder_caq',
-    'AdaMixerDecoder_aql', 'AdaMixerDecoder_Qrecycle', 'AdaMixerDecoder_stodepth'
+    'FeatureRelayHead', 'GlobalContextHead',
+    'AdaMixerDecoder_Qrecycle', 
 ]

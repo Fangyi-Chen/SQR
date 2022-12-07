@@ -11,7 +11,7 @@ from mmcv.image import tensor2imgs
 from mmcv.runner import get_dist_info
 
 from mmdet.core import encode_mask_results
-import cccu
+
 
 def single_gpu_test(model,
                     data_loader,
