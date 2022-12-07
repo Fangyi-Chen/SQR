@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # AdaMixer: A Fast-Converging Query-Based Object Detector [arxiv](https://arxiv.org/abs/2203.16507)
 
 > [**AdaMixer: A Fast-Converging Query-Based Object Detector**](https://arxiv.org/abs/2203.16507)<br>
@@ -265,3 +266,7 @@ If you use this toolbox or benchmark in your research, please cite this project.
 - [MMEditing](https://github.com/open-mmlab/mmediting): OpenMMLab image and video editing toolbox.
 - [MMOCR](https://github.com/open-mmlab/mmocr): A Comprehensive Toolbox for Text Detection, Recognition and Understanding.
 - [MMGeneration](https://github.com/open-mmlab/mmgeneration): OpenMMLab image and video generative models toolbox.
+=======
+# SQR
+Enhanced Training of Query-Based Object Detection via Selective Query Recollection
+>>>>>>> f35f7e6ff60c9bd604a366a17958f5f947aad5dc
