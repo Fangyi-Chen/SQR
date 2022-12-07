@@ -4,7 +4,7 @@ from mmdet.core import bbox2result, bbox2roi, bbox_xyxy_to_cxcywh
 from mmdet.core.bbox.samplers import PseudoSampler
 from ..builder import HEADS
 from .cascade_roi_head import CascadeRoIHead
-import cccu
+
 import os
 DEBUG = 'DEBUG' in os.environ
 
@@ -200,28 +200,8 @@ class AdaMixerDecoder_aq(CascadeRoIHead):
                 0, 1).topk(
                     self.test_cfg.max_per_img, sorted=False)
             labels_per_img = topk_indices % num_classes
-            a = topk_indices // num_classes
             bbox_pred_per_img = bboxes_list[img_id][topk_indices //
                                                     num_classes]
-
-            '''  # fangyi modify start
-            # The following is a my implementation for testing where each query only produce one result
-            cls_score_per_img = cls_score[img_id]
-            scores_per_img, labels_per_img = torch.max(cls_score_per_img, dim=1)
-            bbox_pred_per_img = bboxes_list[img_id]
-            
-            # record query bias on class
-            ct = cccu.counter(log_name='adamixer_query_predcls_temp.txt', matrixshape=(300, 80))
-            for i, label_per_img in enumerate(labels_per_img):
-                ct.m[i, label_per_img] += 1
-            ct.record()
-            # filter out low confident  # proved not useful at all
-            # index = (scores_per_img > 0.02).nonzero().squeeze()
-            # if len(index.shape) != 0:
-            #     scores_per_img = scores_per_img[index]
-            #     labels_per_img = labels_per_img[index]
-            #     bbox_pred_per_img = bbox_pred_per_img[index]
-            ''' # fangyi modify end
 
             if rescale:
                 scale_factor = img_metas[img_id]['scale_factor']

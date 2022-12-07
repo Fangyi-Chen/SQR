@@ -11,7 +11,7 @@ from mmdet.core import (bbox_cxcywh_to_xyxy, bbox_xyxy_to_cxcywh,
 from mmdet.models.utils import build_transformer
 from ..builder import HEADS, build_loss
 from .anchor_free_head import AnchorFreeHead
-from cccu import counter
+
 
 @HEADS.register_module()
 class DETRHead(AnchorFreeHead):

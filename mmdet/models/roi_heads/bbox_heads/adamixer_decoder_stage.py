@@ -19,7 +19,7 @@ from .adaptive_mixing_operator import AdaptiveMixing
 from mmdet.core import bbox_overlaps
 
 import os
-import cccu
+
 
 DEBUG = 'DEBUG' in os.environ
 
@@ -64,25 +64,6 @@ def make_sample_points(offset, num_group, xyzr):
 
     sample_lvl = roi_lvl + offset[..., 2:3]
 
-    #### Fangyi: painter starts from here
-    '''
-    painter = cccu.painter('adamixer-sample-p.jpg', palette_length=400)
-    # painter.show()
-    for j, (sample, roi) in enumerate(zip(sample_yx[0], roi_cc[0])):
-        painter = cccu.painter('adamixer-sample-p.jpg', palette_length=400)
-        painter.draw_apoint((int(roi.detach().cpu().numpy()[0]), int(roi.detach().cpu().numpy()[1])),
-                            color=j, thickness=4, replace_canvas=0)
-        for i, off in enumerate(sample[0]):
-            painter.draw_apoint((int(off.detach().cpu().numpy()[0]), int(off.detach().cpu().numpy()[1])),
-                                color=j, thickness=1, replace_canvas=0)
-        #IWantToSeeTheJthQuery = 1
-        #if j > IWantToSeeTheJthQuery:
-        #    break
-        #if j == IWantToSeeTheJthQuery:
-        #    painter.show()
-    painter.show()
-    '''
-    #### Fangyi: painter ends at here
     return torch.cat([sample_yx, sample_lvl], dim=-1)
 
 

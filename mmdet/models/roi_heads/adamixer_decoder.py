@@ -4,7 +4,6 @@ from mmdet.core import bbox2result, bbox2roi, bbox_xyxy_to_cxcywh
 from mmdet.core.bbox.samplers import PseudoSampler
 from ..builder import HEADS
 from .cascade_roi_head import CascadeRoIHead
-import cccu
 import os
 DEBUG = 'DEBUG' in os.environ
 
@@ -50,8 +49,7 @@ class AdaMixerDecoder(CascadeRoIHead):
         if train_cfg is not None:
             for stage in range(num_stages):
                 assert isinstance(self.bbox_sampler[stage], PseudoSampler)
-        # self.writer = cccu.TextWriter('./out/gt_assigned_2_querys.txt')
-        self.recoder = []
+
 
     def _bbox_forward(self, stage, img_feat, query_xyzr, query_content, img_metas):
         num_imgs = len(img_metas)
@@ -125,8 +123,6 @@ class AdaMixerDecoder(CascadeRoIHead):
                 assign_result = self.bbox_assigner[stage].assign(
                     normalize_bbox_ccwh, cls_pred_list[i], gt_bboxes[i],
                     gt_labels[i], img_metas[i])
-                saving = assign_result.gt_inds.tolist()
-                # self.writer.record([img_metas[i]['ori_filename'], stage, saving])
                 sampling_result = self.bbox_sampler[stage].sample(
                     assign_result, bboxes_list[i], gt_bboxes[i])
                 sampling_results.append(sampling_result)
@@ -145,8 +141,7 @@ class AdaMixerDecoder(CascadeRoIHead):
             for key, value in single_stage_loss.items():
                 all_stage_loss[f'stage{stage}_{key}'] = value * \
                     self.stage_loss_weights[stage]
-        # self.writer.save()
-        # self.writer.auto_split(interval=10000)
+
         return all_stage_loss
 
     def simple_test(self,
@@ -169,8 +164,6 @@ class AdaMixerDecoder(CascadeRoIHead):
             cls_score = bbox_results['cls_score']
             bboxes_list = bbox_results['detach_bboxes_list']
             query_xyzr = bbox_results['query_xyzr']
-            # record[stage].append(cls_score[0].cpu().tolist())
-            # record[stage].append(bboxes_list[0].cpu().tolist())
 
         num_classes = self.bbox_head[-1].num_classes
         det_bboxes = []
@@ -192,24 +185,6 @@ class AdaMixerDecoder(CascadeRoIHead):
             bbox_pred_per_img = bboxes_list[img_id][topk_indices //
                                                     num_classes]
 
-            '''  # fangyi modify start
-            # The following is a my implementation for testing where each query only produce one result
-            cls_score_per_img = cls_score[img_id]
-            scores_per_img, labels_per_img = torch.max(cls_score_per_img, dim=1)
-            bbox_pred_per_img = bboxes_list[img_id]
-            # record query bias on class
-            ct = cccu.counter(log_name='adamixer_query_predcls_temp.txt', matrixshape=(300, 80))
-            for i, label_per_img in enumerate(labels_per_img):
-                ct.m[i, label_per_img] += 1
-            ct.record()
-            # filter out low confident  # proved not useful at all
-            # index = (scores_per_img > 0.02).nonzero().squeeze()
-            # if len(index.shape) != 0:
-            #     scores_per_img = scores_per_img[index]
-            #     labels_per_img = labels_per_img[index]
-            #     bbox_pred_per_img = bbox_pred_per_img[index]
-            ''' # fangyi modify end
-
             if rescale:
                 scale_factor = img_metas[img_id]['scale_factor']
                 record['scale_factor'] = scale_factor.tolist()
@@ -222,10 +197,6 @@ class AdaMixerDecoder(CascadeRoIHead):
             bbox2result(det_bboxes[i], det_labels[i], num_classes)
             for i in range(num_imgs)
         ]
-
-        #self.recoder.append(record)
-        if len(self.recoder) == 5000:
-            cccu.MetaSaver(self.recoder, 'metaquery.pkl')
 
         return bbox_results
 

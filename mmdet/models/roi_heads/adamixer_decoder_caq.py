@@ -4,7 +4,7 @@ from mmdet.core import bbox2result, bbox2roi, bbox_xyxy_to_cxcywh
 from mmdet.core.bbox.samplers import PseudoSampler
 from ..builder import HEADS
 from .cascade_roi_head import CascadeRoIHead
-import cccu
+
 import os
 DEBUG = 'DEBUG' in os.environ
 

@@ -1,6 +1,6 @@
 from ..builder import DETECTORS
 from .two_stage import TwoStageDetector
-import cccu
+
 
 @DETECTORS.register_module()
 class SparseRCNN(TwoStageDetector):
@@ -47,12 +47,7 @@ class SparseRCNN(TwoStageDetector):
         assert proposals is None, 'Sparse R-CNN does not support' \
                                   ' external proposals'
         assert gt_masks is None, 'Sparse R-CNN does not instance segmentation'
-        ### Fangyi: painter start
-        '''
-        painter = cccu.painter(canvas_name='adamixer-sample-p.jpg')
-        painter.loadimg(cccu.rescale(cccu.MetaReader(img_metas[0]['filename'], print_detail=False), dim=(1333, 800)))
-        '''
-        ### Fangyi: painter end
+
         x = self.extract_feat(img)
         proposal_boxes, proposal_features, imgs_whwh = \
             self.rpn_head.forward_train(x, img_metas)
@@ -82,8 +77,7 @@ class SparseRCNN(TwoStageDetector):
                 The outer list corresponds to each image. The inner list
                 corresponds to each class.
         """
-        painter = cccu.painter(canvas_name='adamixer-sample-p.jpg')
-        painter.loadimg(cccu.rescale(cccu.MetaReader(img_metas[0]['filename'], print_detail=False), dim=(1333, 800)))
+
         x = self.extract_feat(img)
         proposal_boxes, proposal_features, imgs_whwh = \
             self.rpn_head.simple_test_rpn(x, img_metas)
