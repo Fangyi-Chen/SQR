@@ -1,6 +1,8 @@
 **/.DS_Store
 .vscode
 
+__pycache__/
+
 
 # C extensions
 *.so
