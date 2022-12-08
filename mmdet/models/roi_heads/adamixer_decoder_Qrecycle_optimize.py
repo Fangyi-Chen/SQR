@@ -89,6 +89,7 @@ class AdaMixerDecoder_Qrecycle_optimize(CascadeRoIHead):
                 AdaMixerDecoder_Qrecycle_optimize._DEBUG += 1
         return bbox_results
 
+
     def forward_train(self,
                       x,
                       query_xyzr,
@@ -103,14 +104,12 @@ class AdaMixerDecoder_Qrecycle_optimize(CascadeRoIHead):
         num_imgs = len(img_metas)
         num_queries = query_xyzr.size(1)
         imgs_whwh_keep = imgs_whwh.repeat(1, num_queries, 1)
-        imgs_whwh = imgs_whwh.repeat(1, num_queries, 1)
 
         batchsize = len(img_metas)
         x_keep = [_ for _ in x]
         img_metas_keep = img_metas.copy()
         gt_bboxes_keep = gt_bboxes.copy()
         gt_labels_keep = gt_labels.copy()
-
 
         all_stage_bbox_results = []
         all_stage_loss = {}
@@ -119,7 +118,6 @@ class AdaMixerDecoder_Qrecycle_optimize(CascadeRoIHead):
 
         for stage in range(self.num_stages):
 
-            single_stage_group_loss_new = []
             start_q = self.start_q[stage]
             end_q = self.end_q[stage]
             query_xyzr_list = query_xyzr_list_reserve.copy()[start_q:end_q]
@@ -169,26 +167,18 @@ class AdaMixerDecoder_Qrecycle_optimize(CascadeRoIHead):
             cls_score = bbox_results['cls_score']
             decode_bbox_pred = bbox_results['decode_bbox_pred']
 
-            single_stage_group_loss_new.append(self.bbox_head[stage].loss(
+            single_stage_group_loss = self.bbox_head[stage].loss(
                 cls_score.view(-1, cls_score.size(-1)),
                 decode_bbox_pred.view(-1, 4),
                 *bbox_targets,
                 imgs_whwh=imgs_whwh_)
-            )
 
             # TODO: weight group loss: for the most important group weight it the highest
-            for groupid, single_stage_single_group_loss in enumerate(single_stage_group_loss_new):
-                if groupid == 0:
-                    for key, value in single_stage_single_group_loss.items():
-                        all_stage_loss[f'stage{stage}_{key}'] = value * \
-                            self.stage_loss_weights[stage]
-                else:
-                    for key, value in single_stage_single_group_loss.items():
-                        all_stage_loss[f'stage{stage}_{key}'] += value * \
-                            self.stage_loss_weights[stage]
+            for key, value in single_stage_group_loss.items():
+                all_stage_loss[f'stage{stage}_{key}'] = value * \
+                    self.stage_loss_weights[stage] * (end_q - start_q)
 
         return all_stage_loss
-
 
     def simple_test(self,
                     x,
