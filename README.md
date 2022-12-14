@@ -1,94 +1,64 @@
-<<<<<<< HEAD
-# AdaMixer: A Fast-Converging Query-Based Object Detector [arxiv](https://arxiv.org/abs/2203.16507)
+# Enhanced Training of Query-Based Object Detection via Selective Query Recollection [arxiv](https://arxiv.org/abs/x)
 
-> [**AdaMixer: A Fast-Converging Query-Based Object Detector**](https://arxiv.org/abs/2203.16507)<br>
-> _accept to CVPR 2022 as an oral presentation_ <br>
-> [Ziteng Gao](https://sebgao.github.io), [Limin Wang](http://wanglimin.github.io/), Bing Han, Sheng Guo<br>Nanjing University, MYbank Ant Group
+> [**Enhanced Training of Query-Based Object Detection via Selective Query Recollection**](https://arxiv.org/abs/x)<br>
+> Fangyi Chen, Han Zhang, Kai Hu, Yu-kai Huang, Chenchen Zhu, Marios Savvides<br>Carnegie Mellon University, Meta AI
 
-[[slides]](adamixer_cvpr_2022_keynote.pdf)
-[[arxiv]](https://arxiv.org/abs/2203.16507)
 
 ## 📰 News
-[2022.4.4] The code is available now.
+[2022.12] The code is available now.
 
-[2022.3.31] Code will be released in a few days (not too long). Pre-trained models will take some time to grant the permission of Ant Group to be available online. Please stay tuned or *watch this repo* for quick information.
+## 🤔 Motivation
+### 🌧 One phenomenon where query-based object detectors mispredict at the last decoding stage but correctly predict at intermediate stages.
 
-## ✨ Highlights
-### 🆕 MLP-Mixer for Object Detection
-To our best knowledge, we are the first to introduce the MLP-Mixer for Object detection. The MLP-Mixer is used in the DETR-like decoder in an adaptive and query-wise manner to enrich the adaptibility to varying objects across images.
+The decoding procedure of DETR implies that detection should be stage-by-stage enhanced in terms of IOU and confidence score. Indeed, monotonically improved AP is empirically achieved by this procedure. However, when visualizing the stage-wise predictions, we surprisingly observe that decoder makes mistakes in a decent proportion of cases where the later stages degrade true- positives and upgrade false-positives from the former stages.
 
-### ⚡️ Fast Converging DETR-like Architecture
-AdaMixer enjoys fast convergence speed and reach up to 45.0 AP on COCO val within 12 epochs with only the architectural design improvement. Our method is compatible with other training improvements, like [multiple predictions from a query](https://github.com/megvii-research/AnchorDETR) and [denosing training](https://github.com/FengLi-ust/DN-DETR), which are expected to improve AdaMixer further (we have not tried yet). 
+### ⭕ Two limitations of training 
+1. The responsibility that each stage takes is unbalanced, while supervision applied to them is analogous.  
+2.  Due to the sequential structure of the decoder, an intermediate query refined by a stage - no matter this refinement brings positive or negative effects - will be cascaded to the following stage
 
-### 🧱 Simple Architecture, NO extra attentional encoders or FPNs required
-Our AdaMixer does not hunger for extra attention encoders or explicit feature pyramid networks. Instead, we improve the query decoder in DETR-like detectors to keep the architecture as simple, efficient, and strong as possible.
-
-
+## Selective Query Recollection
+As a training strategy that fit most query-based object detectors (DETR family), SQR cumulatively collects intermediate queries as stages go deeper, and feeds the collected queries to the downstream stages aside from the sequential structure.
 
 
 
-## ➡️ Guide to Our Code
-Our code structure follows the MMDetection framework. To get started, please refer to mmdetection doc [get_started.md](docs/get_started.md) for installation.
+## ➡️ Guide to Code
 
-Our AdaMixer config file lies in [configs/adamixer](configs/adamixer) folder. You can start training our detectors with make targets in [Makefile](Makefile).
+This repo provide the implementation of SQR-Adamixer. [Adamixer](https://arxiv.org/abs/2203.16507) is a typical query-based object detector that enjoys fast convergence and high AP performance. 
 
-The code of a AdaMixer decoder stage is in
-[mmdet/models/roi_heads/bbox_heads/adamixer_decoder_stage.py](mmdet/models/roi_heads/bbox_heads/adamixer_decoder_stage.py).
-The code of the 3D feature space sampling is in [mmdet/models/roi_heads/bbox_heads/sampling_3d_operator.py](mmdet/models/roi_heads/bbox_heads/sampling_3d_operator.py).
-The code of the adaptive mixing process is in [mmdet/models/roi_heads/bbox_heads/adaptive_mixing_operator.py](mmdet/models/roi_heads/bbox_heads/adaptive_mixing_operator.py).
+The code structure follows the MMDetection framework. To get started, please refer to mmdetection doc [get_started.md](docs/get_started.md) for installation.
 
+Our config file lies in [configs/sqr](configs/sqr) folder. 
+
+We provide two implementation instances of SQR in this repo, one is in [/mmdet/models/roi_heads/adamixer_decoder_Qrecycle.py](/mmdet/models/roi_heads/adamixer_decoder_Qrecycle.py), which might be slower for training but require less GPU memory. Another is in [/mmdet/models/roi_heads/adamixer_decoder_Qrecycle_optimize.py](/mmdet/models/roi_heads/adamixer_decoder_Qrecycle_optimize.py), which is faster than the former but has higher requirement on GPU memory. 
 
 __NOTE:__
-1. Please use `mmcv_full==1.3.3` and `pytorch>=1.5.0` for correct reproduction ([#4](/../../issues/4), [#12](/../../issues/12)).~~Please make sure `init_weight` methods in `AdaptiveSamplingMixing` and `AdaptiveMixing`  are called for correct initializations *AND* the initialized weights are not overrided by other methods (some MMCV versions may incur repeated initializations).~~
-2. We notice ~0.3 AP (42.7 AP reported in the paper) noise for AdaMixer w/ R50 with 1x training settings.
+Please use `mmcv_full==1.3.3` and `pytorch>=1.5.0` for correct reproduction.
 
 ## 🧪 Main Results
-|  detector | backbone  | APval | APtest |
-| :-------: | :------:  | :---: | :----: |
-| AdaMixer   |  R50     |  47.0  | 47.2   | 
-| AdaMixer   |  R101    |  48.0  | 48.1   | 
-| AdaMixer   |  X101-DCN|  49.5  | 49.3   | 
-| AdaMixer   |  Swin-S  |  51.3  | 51.3   | 
 
+|         | #q       |AP    | AP50 | AP75 |  APs |  APm | APl  | model | cfg |
+|---------|-------|------|------|------|------|------|------|-------|------|
+|SQR-Adamixer-R50 | 100| 44.5  |  63.2 |  47.8 |  25.7 |  47.4 |  60.2 | [ckpt]() | cfg|
+|SQR-Adamixer-R101-7stages| 300| 49.8  |  68.8 | 54.0 |  32.0 | 53.4 | 65.1 | [ckpt]() | cfg |
+
+__NOTE:__
+We will release more results in the future
 
 ## ✏️ Citation
-If you find AdaMixer useful in your research, please cite us using the following entry:
+If you find SQR useful, please use the following entry to cite us:
 ```
-@inproceedings{adamixer22cvpr,
-  author    = {Ziteng Gao and
-               Limin Wang and
-               Bing Han and
-               Sheng Guo},
-  title     = {AdaMixer: A Fast-Converging Query-Based Object Detector},
-  booktitle = {{CVPR}},
+@inproceedings{sqr2022chen,
+  author    = {Fangyi Chen and
+               Han Zhang and
+               Kai Hu and
+               Yu-kai Huang and
+               Chenchen Zhu and
+               Marios Savvides},
+  title     = {Enhanced Training of Query-Based Object Detection via Selective Query Recollection},
+  booktitle = {{arxiv}},
   year      = {2022}
 }
 ```
-
-
-## 👍 Acknowledgement
-Thanks to [Zhan Tong](https://github.com/yztongzhan) and Zihua Xiong for their help.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -266,7 +236,3 @@ If you use this toolbox or benchmark in your research, please cite this project.
 - [MMEditing](https://github.com/open-mmlab/mmediting): OpenMMLab image and video editing toolbox.
 - [MMOCR](https://github.com/open-mmlab/mmocr): A Comprehensive Toolbox for Text Detection, Recognition and Understanding.
 - [MMGeneration](https://github.com/open-mmlab/mmgeneration): OpenMMLab image and video generative models toolbox.
-=======
-# SQR
-Enhanced Training of Query-Based Object Detection via Selective Query Recollection
->>>>>>> f35f7e6ff60c9bd604a366a17958f5f947aad5dc
