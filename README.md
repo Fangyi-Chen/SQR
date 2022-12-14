@@ -16,7 +16,7 @@ The decoding procedure of DETR implies that detection should be stage-by-stage e
 1. The responsibility that each stage takes is unbalanced, while supervision applied to them is analogous.  
 2.  Due to the sequential structure of the decoder, an intermediate query refined by a stage - no matter this refinement brings positive or negative effects - will be cascaded to the following stage
 
-## 🎲 Selective Query Recollection
+## 🚀 Selective Query Recollection
 As a training strategy that fit most query-based object detectors (DETR family), SQR cumulatively collects intermediate queries as stages go deeper, and feeds the collected queries to the downstream stages aside from the sequential structure.
 
 
