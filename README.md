@@ -1,6 +1,6 @@
-# Enhanced Training of Query-Based Object Detection via Selective Query Recollection [arxiv](https://arxiv.org/abs/x)
+# Enhanced Training of Query-Based Object Detection via Selective Query Recollection [arxiv](https://arxiv.org/abs/2212.07593)
 
-> [**Enhanced Training of Query-Based Object Detection via Selective Query Recollection**](https://arxiv.org/abs/x)<br>
+> [**Enhanced Training of Query-Based Object Detection via Selective Query Recollection**](https://arxiv.org/abs/2212.07593)<br>
 > Fangyi Chen, Han Zhang, Kai Hu, Yu-kai Huang, Chenchen Zhu, Marios Savvides<br>Carnegie Mellon University, Meta AI
 
 
@@ -38,8 +38,8 @@ Please use `mmcv_full==1.3.3` and `pytorch>=1.5.0` for correct reproduction.
 
 |         | #q       |AP    | AP50 | AP75 |  APs |  APm | APl  | model | cfg |
 |---------|-------|------|------|------|------|------|------|-------|------|
-|SQR-Adamixer-R50 | 100| 44.5  |  63.2 |  47.8 |  25.7 |  47.4 |  60.2 | [ckpt]() | cfg|
-|SQR-Adamixer-R101-7stages| 300| 49.8  |  68.8 | 54.0 |  32.0 | 53.4 | 65.1 | [ckpt]() | cfg |
+|SQR-Adamixer-R50 | 100| 44.5  |  63.2 |  47.8 |  25.7 |  47.4 |  60.2 | [ckpt](https://drive.google.com/file/d/1-io4kMQ-6h814AMmE7wKKUcEmTjLdpIa/view?usp=share_link) |[cfg](configs/sqr/adamixer_SQR_r50_1x_coco.py)|
+|SQR-Adamixer-R101-7stages| 300| 49.8  |  68.8 | 54.0 |  32.0 | 53.4 | 65.1 | [ckpt](https://drive.google.com/file/d/1alJNY8eJy-E7mURJDj5LZFHNZ6SG88CF/view?usp=share_link) | cfg |
 
 __NOTE:__
 We will release more results in the future
@@ -47,16 +47,13 @@ We will release more results in the future
 ## ✏️ Citation
 If you find SQR useful, please use the following entry to cite us:
 ```
-@inproceedings{sqr2022chen,
-  author    = {Fangyi Chen and
-               Han Zhang and
-               Kai Hu and
-               Yu-kai Huang and
-               Chenchen Zhu and
-               Marios Savvides},
-  title     = {Enhanced Training of Query-Based Object Detection via Selective Query Recollection},
-  booktitle = {{arxiv}},
-  year      = {2022}
+@misc{chen2022sqr,
+      title={Enhanced Training of Query-Based Object Detection via Selective Query Recollection}, 
+      author={Fangyi Chen and Han Zhang and Kai Hu and Yu-kai Huang and Chenchen Zhu and Marios Savvides},
+      year={2022},
+      eprint={2212.07593},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
 }
 ```
 
