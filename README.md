@@ -1,7 +1,7 @@
 # Enhanced Training of Query-Based Object Detection via Selective Query Recollection [arxiv](https://arxiv.org/abs/2212.07593)
 
 > [**Enhanced Training of Query-Based Object Detection via Selective Query Recollection**](https://arxiv.org/abs/2212.07593)<br>
-> Fangyi Chen, Han Zhang, Kai Hu, Yu-kai Huang, Chenchen Zhu, Marios Savvides<br>Carnegie Mellon University, Meta AI
+> Fangyi Chen, Han Zhang, Kai Hu, Yu-Kai Huang, Chenchen Zhu, Marios Savvides<br>Carnegie Mellon University, Meta AI
 
 
 ## 📰 News
@@ -49,7 +49,7 @@ If you find SQR useful, please use the following entry to cite us:
 ```
 @misc{chen2022sqr,
       title={Enhanced Training of Query-Based Object Detection via Selective Query Recollection}, 
-      author={Fangyi Chen and Han Zhang and Kai Hu and Yu-kai Huang and Chenchen Zhu and Marios Savvides},
+      author={Fangyi Chen and Han Zhang and Kai Hu and Yu-Kai Huang and Chenchen Zhu and Marios Savvides},
       year={2022},
       eprint={2212.07593},
       archivePrefix={arXiv},
