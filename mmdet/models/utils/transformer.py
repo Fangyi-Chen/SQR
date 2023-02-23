@@ -703,6 +703,96 @@ class DeformableDetrTransformerDecoder(TransformerLayerSequence):
         return output, reference_points
 
 
+@TRANSFORMER_LAYER_SEQUENCE.register_module()
+class QRDeformableDetrTransformerDecoder(TransformerLayerSequence):
+    """Implements the decoder in DETR transformer.
+
+    Args:
+        return_intermediate (bool): Whether to return intermediate outputs.
+        coder_norm_cfg (dict): Config of last normalization layer. Default：
+            `LN`.
+    """
+
+    def __init__(self, *args, start_q=None, end_q=None, return_intermediate=False, **kwargs):
+
+        super(QRDeformableDetrTransformerDecoder, self).__init__(*args, **kwargs)
+        self.return_intermediate = return_intermediate
+        self.start_q = start_q
+        self.end_q = end_q
+
+    def forward(self,
+                query,
+                *args,
+                reference_points=None,
+                valid_ratios=None,
+                reg_branches=None,
+                **kwargs):
+        """Forward function for `TransformerDecoder`.
+
+        Args:
+            query (Tensor): Input query with shape
+                `(num_query, bs, embed_dims)`.
+            reference_points (Tensor): The reference
+                points of offset. has shape
+                (bs, num_query, 4) when as_two_stage,
+                otherwise has shape ((bs, num_query, 2).
+            valid_ratios (Tensor): The radios of valid
+                points on the feature map, has shape
+                (bs, num_levels, 2)
+            reg_branch: (obj:`nn.ModuleList`): Used for
+                refining the regression results. Only would
+                be passed when with_box_refine is True,
+                otherwise would be passed a `None`.
+
+        Returns:
+            Tensor: Results with shape [1, num_query, bs, embed_dims] when
+                return_intermediate is `False`, otherwise it has shape
+                [num_layers, num_query, bs, embed_dims].
+        """
+
+        intermediate = []
+        intermediate_reference_points = []
+
+        query_list_reserve = [query]
+
+        for lid, layer in enumerate(self.layers):
+            if reference_points.shape[-1] == 4:
+                reference_points_input = reference_points[:, :, None] * \
+                    torch.cat([valid_ratios, valid_ratios], -1)[:, None]
+            else:
+                assert reference_points.shape[-1] == 2
+                reference_points_input = reference_points[:, :, None] * \
+                    valid_ratios[:, None]
+
+            start_q = self.start_q[lid]
+            end_q = self.end_q[lid]
+            query_list = query_list_reserve.copy()[start_q:end_q]
+
+            for groupid, output in enumerate(query_list):
+                output = layer(
+                    output,
+                    *args,
+                    reference_points=reference_points_input,
+                    **kwargs)
+                # output = output.permute(1, 0, 2)
+
+                if reg_branches is not None:
+                    assert NotImplementedError
+                # output = output.permute(1, 0, 2)
+
+                query_list_reserve.append(output)
+
+                if self.return_intermediate:
+                    intermediate.append(output)
+                    intermediate_reference_points.append(reference_points)
+
+        if self.return_intermediate:
+            return torch.stack(intermediate), torch.stack(
+                intermediate_reference_points)
+
+        return output, reference_points
+
+
 @TRANSFORMER.register_module()
 class DeformableDetrTransformer(Transformer):
     """Implements the DeformableDETR transformer.
