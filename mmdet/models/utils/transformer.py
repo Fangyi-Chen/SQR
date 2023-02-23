@@ -719,7 +719,7 @@ class QRDeformableDetrTransformerDecoder(TransformerLayerSequence):
         self.return_intermediate = return_intermediate
         self.start_q = start_q
         self.end_q = end_q
-
+        assert False, "deformable detr sqr has not been merged to this repo yet. please wait several days"
     def forward(self,
                 query,
                 *args,
