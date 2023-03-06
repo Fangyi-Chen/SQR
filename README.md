@@ -5,7 +5,10 @@
 
 
 ## 📰 News
-[2022.12] The code is available now.
+[2023.3 ] This work has been accepted by CVPR 2023.
+[2023.3 ] The experiments and code on SQR-Deformable DETR have been released.
+[2022.12] The experiments and code on SQR-Adamixer have been released.
+[2022.12] The code is available now. 
 
 ## 🤔 Motivation
 ### 🌧 One phenomenon where query-based object detectors mispredict at the last decoding stage but correctly predict at intermediate stages.
@@ -23,13 +26,18 @@ As a training strategy that fit most query-based object detectors (DETR family),
 
 ## ➡️ Guide to Code
 
-This repo provide the implementation of SQR-Adamixer. [Adamixer](https://arxiv.org/abs/2203.16507) is a typical query-based object detector that enjoys fast convergence and high AP performance. 
+This repo provide the implementation of SQR-Adamixer and SQR-deformable DETR. [Adamixer](https://arxiv.org/abs/2203.16507) is a typical query-based object detector that enjoys fast convergence and high AP performance. 
+[Deformable DETR](https://arxiv.org/abs/2010.04159) is known for its creative deformable attention module that mitigates the slow convergence and high complexity issues of DETR.
 
 The code structure follows the MMDetection framework. To get started, please refer to mmdetection doc [get_started.md](docs/get_started.md) for installation.
 
 Our config file lies in [configs/sqr](configs/sqr) folder. 
 
-We provide two implementation instances of SQR in this repo, one is in [/mmdet/models/roi_heads/adamixer_decoder_Qrecycle.py](/mmdet/models/roi_heads/adamixer_decoder_Qrecycle.py), which might be slower for training but require less GPU memory. Another is in [/mmdet/models/roi_heads/adamixer_decoder_Qrecycle_optimize.py](/mmdet/models/roi_heads/adamixer_decoder_Qrecycle_optimize.py), which is faster than the former but has higher requirement on GPU memory. 
+### SQR-Adamixer
+We provide two implementation instances of SQR-adamixer in this repo, one is in [/mmdet/models/roi_heads/adamixer_decoder_Qrecycle.py](/mmdet/models/roi_heads/adamixer_decoder_Qrecycle.py), which might be slower for training but require less GPU memory (and easy to understand the logic). Another is in [/mmdet/models/roi_heads/adamixer_decoder_Qrecycle_optimize.py](/mmdet/models/roi_heads/adamixer_decoder_Qrecycle_optimize.py), which is much faster than the former but has higher requirement on GPU memory. 
+
+### SQR-Deformable DETR
+We provide the implementation of SQR-deformable DETR in `QRDeformableDetrTransformerDecoder` in [/mmdet/models/utils/transformer.py](/mmdet/models/utils/transformer.py). Note Deformable DETR requires 32 batchsize and we follow this setting.
 
 __NOTE:__
 Please use `mmcv_full==1.3.3` and `pytorch>=1.5.0` for correct reproduction.
@@ -40,9 +48,8 @@ Please use `mmcv_full==1.3.3` and `pytorch>=1.5.0` for correct reproduction.
 |---------|-------|------|------|------|------|------|------|-------|------|
 |SQR-Adamixer-R50 | 100| 44.5  |  63.2 |  47.8 |  25.7 |  47.4 |  60.2 | [ckpt](https://drive.google.com/file/d/1-io4kMQ-6h814AMmE7wKKUcEmTjLdpIa/view?usp=share_link) |[cfg](configs/sqr/adamixer_SQR_r50_1x_coco.py)|
 |SQR-Adamixer-R101-7stages| 300| 49.8  |  68.8 | 54.0 |  32.0 | 53.4 | 65.1 | [ckpt](https://drive.google.com/file/d/1alJNY8eJy-E7mURJDj5LZFHNZ6SG88CF/view?usp=share_link) | cfg |
+|SQR-Deformable-DETR | 300| 45.8  |  64.7 |  49.8 |  28.2 |  49.4 |  60.0 | [ckpt](https://drive.google.com/file/d/1JTWmHXPngUJY7EaYMneVHYYlvK_5GDfV/view?usp=sharing) |[cfg](configs/sqr/deformable_detr_SQR_r50_50e_coco.py)|
 
-__NOTE:__
-We will release more results in the future
 
 ## ✏️ Citation
 If you find SQR useful, please use the following entry to cite us:

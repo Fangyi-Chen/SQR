@@ -704,7 +704,7 @@ class DeformableDetrTransformerDecoder(TransformerLayerSequence):
 
 
 @TRANSFORMER_LAYER_SEQUENCE.register_module()
-class QRDeformableDetrTransformerDecoder(TransformerLayerSequence):
+class QRDeformableDetrTransformerDecoder(DeformableDetrTransformerDecoder):
     """Implements the decoder in DETR transformer.
 
     Args:
@@ -719,8 +719,103 @@ class QRDeformableDetrTransformerDecoder(TransformerLayerSequence):
         self.return_intermediate = return_intermediate
         self.start_q = start_q
         self.end_q = end_q
-        assert False, "deformable detr sqr has not been merged to this repo yet. please wait several days"
+
     def forward(self,
+                query,
+                *args,
+                reference_points=None,
+                valid_ratios=None,
+                reg_branches=None,
+                **kwargs):
+        """Forward function for `sqr deformable Decoder`.
+
+        Args:
+            query (Tensor): Input query with shape
+                `(num_query, bs, embed_dims)`.
+            reference_points (Tensor): The reference
+                points of offset. has shape
+                (bs, num_query, 4) when as_two_stage,
+                otherwise has shape ((bs, num_query, 2).
+            valid_ratios (Tensor): The radios of valid
+                points on the feature map, has shape
+                (bs, num_levels, 2)
+            reg_branch: (obj:`nn.ModuleList`): Used for
+                refining the regression results. Only would
+                be passed when with_box_refine is True,
+                otherwise would be passed a `None`.
+
+        Returns:
+            Tensor: Results with shape [1, num_query, bs, embed_dims] when
+                return_intermediate is `False`, otherwise it has shape
+                [num_layers, num_query, bs, embed_dims].
+        """
+        # inference forward function is unchanged for SQR
+        if not query.requires_grad:
+            return super(QRDeformableDetrTransformerDecoder, self).forward(query=query,
+                                                                    reference_points=reference_points,
+                                                                    valid_ratios=valid_ratios,
+                                                                    reg_branches=reg_branches,
+                                                                    **kwargs)
+        # Training forward starts here
+        intermediate = []
+        intermediate_reference_points = []
+
+        query_list_reserve = [query]
+        batchsize = query.shape[1]
+
+        value, query_pos, key_padding_mask = kwargs['value'], \
+                                             kwargs['query_pos'], \
+                                             kwargs['key_padding_mask']
+
+        for lid, layer in enumerate(self.layers):
+            if reference_points.shape[-1] == 4:
+                reference_points_input = reference_points[:, :, None] * \
+                                         torch.cat([valid_ratios, valid_ratios], -1)[:, None]
+            else:
+                assert reference_points.shape[-1] == 2
+                reference_points_input = reference_points[:, :, None] * \
+                                         valid_ratios[:, None]
+
+            start_q = self.start_q[lid]
+            end_q = self.end_q[lid]
+            query_list = query_list_reserve.copy()[start_q:end_q]
+
+            # prepare for parallel process
+            output = torch.cat(query_list, dim=1)
+            fakesetsize = int(output.shape[1] / batchsize)
+            reference_points_input = reference_points_input.repeat(fakesetsize, 1, 1, 1)
+            reference_points_reserve = reference_points.repeat(fakesetsize, 1, 1)
+
+            kwargs['value'] = value.repeat(1, fakesetsize, 1)
+            kwargs['query_pos'] = query_pos.repeat(1, fakesetsize, 1)
+            kwargs['key_padding_mask'] = key_padding_mask.repeat(fakesetsize, 1)
+
+            output = layer(
+                output,
+                *args,
+                reference_points=reference_points_input,
+                **kwargs)
+
+            if reg_branches is not None:
+                assert NotImplementedError
+                #TODO: to implement this, the reference point will need to be reserved for each query as it varies.
+
+            for i in range(fakesetsize):
+                query_list_reserve.append(output[:, batchsize*i:batchsize*(i+1), :])
+
+            if self.return_intermediate:
+                for i in range(fakesetsize):
+                    intermediate.append(output[:, batchsize*i:batchsize*(i+1), :])
+                    intermediate_reference_points.append(reference_points_reserve[batchsize*i:batchsize*(i+1), :, :])
+
+        if self.return_intermediate:
+            res1 = torch.stack(intermediate)
+            res2 = torch.stack(intermediate_reference_points)
+            return res1, res2
+
+        return output, reference_points
+
+    def forward_slow(self,
                 query,
                 *args,
                 reference_points=None,
