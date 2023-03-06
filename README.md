@@ -5,9 +5,9 @@
 
 
 ## 📰 News
-[2023.3 ] This work has been accepted by CVPR 2023.
-[2023.3 ] The experiments and code on SQR-Deformable DETR have been released.
-[2022.12] The experiments and code on SQR-Adamixer have been released.
+[2023.3 ] This work has been accepted by CVPR 2023.\
+[2023.3 ] The experiments and code on SQR-Deformable DETR have been released.\
+[2022.12] The experiments and code on SQR-Adamixer have been released.\
 [2022.12] The code is available now. 
 
 ## 🤔 Motivation
