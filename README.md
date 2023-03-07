@@ -5,9 +5,9 @@
 
 
 ## 📰 News
-[2023.3 ] This work has been accepted by CVPR 2023.\
-[2023.3 ] The experiments and code on SQR-adamixer and SQR-Deformable DETR have been released.\
-[2022.12] The code is available now. 
+**2023.03** This work has been accepted by CVPR 2023.\
+**2023.03** The experiments and code on SQR-adamixer and SQR-Deformable DETR have been released.\
+**2022.12** The code is available now. 
 
 ## 🤔 Motivation
 ### 🌧 One phenomenon where query-based object detectors mispredict at the last decoding stage but correctly predict at intermediate stages.
@@ -28,8 +28,9 @@ As a training strategy that fit most query-based object detectors (DETR family),
 This repo provide the implementation of SQR-Adamixer and SQR-deformable DETR. [Adamixer](https://arxiv.org/abs/2203.16507) is a typical query-based object detector that enjoys fast convergence and high AP performance. 
 [Deformable DETR](https://arxiv.org/abs/2010.04159) is known for its creative deformable attention module that mitigates the slow convergence and high complexity issues of DETR.
 
-The code structure follows the MMDetection framework. To get started, please refer to mmdetection doc [get_started.md](docs/get_started.md) for installation.
+The code structure follows the MMDetection framework. 
 
+### Config
 Our config file lies in [configs/sqr](configs/sqr) folder. 
 
 ### SQR-Adamixer
@@ -38,8 +39,44 @@ We provide two implementation instances of SQR-adamixer in this repo, one is in 
 ### SQR-Deformable DETR
 Similarly, We provide two implementation instances of SQR-deformable DETR in `QRDeformableDetrTransformerDecoder` in [/mmdet/models/utils/transformer.py](/mmdet/models/utils/transformer.py). Named as `forward` and `forward_slow`, separately.
 
+
+## Installation
+
+We test our models under ```python=3.7, pytorch=1.9.1, cuda=11.1, mmcv=1.3.3```. 
+
 __NOTE:__
 Please use `mmcv_full==1.3.3` and `pytorch>=1.5.0` for correct reproduction.
+
+1. Clone this repo
+```sh
+git clone https://github.com/Fangyi-Chen/SQR.git
+cd SQR
+```
+
+2. Create a conda env and activate it
+```sh
+conda create -n sqr-detr python=3.7 -y
+conda activate sqr-detr
+```
+
+3. Install Pytorch and torchvision
+
+Follow the instruction on https://pytorch.org/get-started/locally/.
+```sh
+# an example:
+conda install pytorch==1.9.1 torchvision==0.10.1 torchaudio==0.9.1 cudatoolkit=11.1 -c pytorch -c conda-forge
+```
+
+4. Install mmcv
+```sh
+pip install mmcv-full=1.3.3 --no-cache-dir
+```
+
+5. Install mmdet
+```sh
+pip install -r requirements/build.txt
+pip install -v -e .  # or "python setup.py develop"
+```
 
 ## 🧪 Main Results
 
@@ -239,3 +276,6 @@ If you use this toolbox or benchmark in your research, please cite this project.
 - [MMEditing](https://github.com/open-mmlab/mmediting): OpenMMLab image and video editing toolbox.
 - [MMOCR](https://github.com/open-mmlab/mmocr): A Comprehensive Toolbox for Text Detection, Recognition and Understanding.
 - [MMGeneration](https://github.com/open-mmlab/mmgeneration): OpenMMLab image and video generative models toolbox.
+- 
+
+
