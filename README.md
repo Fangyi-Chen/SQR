@@ -6,8 +6,7 @@
 
 ## 📰 News
 [2023.3 ] This work has been accepted by CVPR 2023.\
-[2023.3 ] The experiments and code on SQR-Deformable DETR have been released.\
-[2022.12] The experiments and code on SQR-Adamixer have been released.\
+[2023.3 ] The experiments and code on SQR-adamixer and SQR-Deformable DETR have been released.\
 [2022.12] The code is available now. 
 
 ## 🤔 Motivation
@@ -37,7 +36,7 @@ Our config file lies in [configs/sqr](configs/sqr) folder.
 We provide two implementation instances of SQR-adamixer in this repo, one is in [/mmdet/models/roi_heads/adamixer_decoder_Qrecycle.py](/mmdet/models/roi_heads/adamixer_decoder_Qrecycle.py), which might be slower for training but require less GPU memory (and easy to understand the logic). Another is in [/mmdet/models/roi_heads/adamixer_decoder_Qrecycle_optimize.py](/mmdet/models/roi_heads/adamixer_decoder_Qrecycle_optimize.py), which is much faster than the former but has higher requirement on GPU memory. 
 
 ### SQR-Deformable DETR
-We provide the implementation of SQR-deformable DETR in `QRDeformableDetrTransformerDecoder` in [/mmdet/models/utils/transformer.py](/mmdet/models/utils/transformer.py). Note Deformable DETR requires 32 as training batchsize and we follow this setting.
+Similarly, We provide two implementation instances of SQR-deformable DETR in `QRDeformableDetrTransformerDecoder` in [/mmdet/models/utils/transformer.py](/mmdet/models/utils/transformer.py). Named as `forward` and `forward_slow`, separately.
 
 __NOTE:__
 Please use `mmcv_full==1.3.3` and `pytorch>=1.5.0` for correct reproduction.
