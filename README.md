@@ -33,7 +33,7 @@ The code structure follows the MMDetection framework. To get started, please ref
 Our config file lies in [configs/sqr](configs/sqr) folder. 
 
 ### SQR-Adamixer
-We provide two implementation instances of SQR-adamixer in this repo, one is in [/mmdet/models/roi_heads/adamixer_decoder_Qrecycle.py](/mmdet/models/roi_heads/adamixer_decoder_Qrecycle.py), which might be slower for training but require less GPU memory (and easy to understand the logic). Another is in [/mmdet/models/roi_heads/adamixer_decoder_Qrecycle_optimize.py](/mmdet/models/roi_heads/adamixer_decoder_Qrecycle_optimize.py), which is much faster than the former but has higher requirement on GPU memory. 
+We provide two implementation instances of SQR-adamixer in this repo, one is in [/mmdet/models/roi_heads/adamixer_decoder_Qrecycle.py](/mmdet/models/roi_heads/adamixer_decoder_Qrecycle.py), which might be slower for training but require less GPU memory (and easy to understand the logic). Another is in [/mmdet/models/roi_heads/adamixer_decoder_Qrecycle_optimize.py](/mmdet/models/roi_heads/adamixer_decoder_Qrecycle_optimize.py), which is much faster than the former (and highly recommended for using) but has higher requirement on GPU memory. 
 
 ### SQR-Deformable DETR
 Similarly, We provide two implementation instances of SQR-deformable DETR in `QRDeformableDetrTransformerDecoder` in [/mmdet/models/utils/transformer.py](/mmdet/models/utils/transformer.py). Named as `forward` and `forward_slow`, separately.
