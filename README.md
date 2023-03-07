@@ -5,7 +5,7 @@
 
 
 ## 📰 News
-**2023.03** This work has been accepted by CVPR 2023.\
+**2023.03** This work has been accepted by [CVPR 2023](https://cvpr2023.thecvf.com/).\
 **2023.03** The experiments and code on SQR-adamixer and SQR-Deformable DETR have been released.\
 **2022.12** The code is available now. 
 
@@ -25,10 +25,8 @@ As a training strategy that fit most query-based object detectors (DETR family),
 
 ## ➡️ Guide to Code
 
-This repo provide the implementation of SQR-Adamixer and SQR-deformable DETR. [Adamixer](https://arxiv.org/abs/2203.16507) is a typical query-based object detector that enjoys fast convergence and high AP performance. 
+This repo provide the implementation of SQR-Adamixer and SQR-deformable DETR. The code structure follows the MMDetection framework. [Adamixer](https://arxiv.org/abs/2203.16507) is a typical query-based object detector that enjoys fast convergence and high AP performance. 
 [Deformable DETR](https://arxiv.org/abs/2010.04159) is known for its creative deformable attention module that mitigates the slow convergence and high complexity issues of DETR.
-
-The code structure follows the MMDetection framework. 
 
 ### Config
 Our config file lies in [configs/sqr](configs/sqr) folder. 
@@ -39,8 +37,7 @@ We provide two implementation instances of SQR-adamixer in this repo, one is in 
 ### SQR-Deformable DETR
 Similarly, We provide two implementation instances of SQR-deformable DETR in `QRDeformableDetrTransformerDecoder` in [/mmdet/models/utils/transformer.py](/mmdet/models/utils/transformer.py). Named as `forward` and `forward_slow`, separately.
 
-
-## Installation
+### Installation
 
 We test our models under ```python=3.7, pytorch=1.9.1, cuda=11.1, mmcv=1.3.3```. 
 
@@ -77,6 +74,10 @@ pip install mmcv-full=1.3.3 --no-cache-dir
 pip install -r requirements/build.txt
 pip install -v -e .  # or "python setup.py develop"
 ```
+
+### Getting Started
+
+Please see [get_started.md](docs/get_started.md) for the basic usage of MMDetection.
 
 ## 🧪 Main Results
 
