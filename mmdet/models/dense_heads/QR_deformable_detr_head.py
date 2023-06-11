@@ -153,9 +153,12 @@ class QRDeformableDETRHead(DETRHead):
         outputs_classes = []
         outputs_coords = []
 
-
         for qid in range(hs.shape[0]):
-            if qid < 1:
+
+            if not feat.requires_grad:  # test mode
+                lvl = 0
+
+            elif qid < 1:  # training mode sqr query-stage alignment
                 lvl = 0
             elif qid >= 1 and qid < 3:
                 lvl = 1
