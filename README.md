@@ -5,7 +5,7 @@
 
 
 ## 📰 News
-**2023.06** We fix a small bug in testing pipeline of deformable detr, but it does not impact the overall result.\
+**2023.06** We fixed an [issue](https://github.com/Fangyi-Chen/SQR/issues/9#issue-1751787799) in the inference of SQR-Deformable DETR, which logically exists but does not impact the final results.\
 **2023.03** This work has been accepted by [CVPR 2023](https://cvpr2023.thecvf.com/).\
 **2023.03** The experiments and code on SQR-adamixer and SQR-Deformable DETR have been released.\
 **2022.12** The code is available now. 
@@ -36,7 +36,7 @@ Our config file lies in [configs/sqr](configs/sqr) folder.
 We provide two implementation instances of SQR-adamixer in this repo, one is in [/mmdet/models/roi_heads/adamixer_decoder_Qrecycle.py](/mmdet/models/roi_heads/adamixer_decoder_Qrecycle.py), which might be slower for training but require less GPU memory (and easy to understand the logic). Another is in [/mmdet/models/roi_heads/adamixer_decoder_Qrecycle_optimize.py](/mmdet/models/roi_heads/adamixer_decoder_Qrecycle_optimize.py), which is much faster than the former (and highly recommended for using) but has higher requirement on GPU memory. 
 
 ### SQR-Deformable DETR
-Similarly, We provide two implementation instances of SQR-deformable DETR in `QRDeformableDetrTransformerDecoder` in [/mmdet/models/utils/transformer.py](/mmdet/models/utils/transformer.py). Named as `forward` and `forward_slow`, separately. Please also check the `QRDeformableDETRHead` in [/mmdet/models/dense_heads/QR_deformable_detr_head.py](mmdet/models/dense_heads/QR_deformable_detr_head.py) where the recollected query is aligned with stages during training. Please note that SQR is only a training strategy that does not affect testing pipeline. 
+Similarly, We provide two implementation instances of SQR-deformable DETR in `QRDeformableDetrTransformerDecoder` in [/mmdet/models/utils/transformer.py](/mmdet/models/utils/transformer.py). Named as `forward` and `forward_slow`, separately. Please also check [this issue](https://github.com/Fangyi-Chen/SQR/issues/9#issue-1751787799) and the `QRDeformableDETRHead` in [/mmdet/models/dense_heads/QR_deformable_detr_head.py](mmdet/models/dense_heads/QR_deformable_detr_head.py) where the recollected query is aligned with stages during training. Please note that SQR is only a training strategy that does not affect/change testing pipeline.  
 
 ### Installation
 
