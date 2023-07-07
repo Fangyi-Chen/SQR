@@ -5,7 +5,7 @@
 
 
 ## 📰 News
-**2023.07** We support SQR-DAB-DETR at [detrex](https://github.com/Fangyi-Chen/sqr-detrex/tree/main/projects/sqr_detr) codebase.\
+**2023.07** We support SQR-DAB-DETR at [detrex](https://github.com/IDEA-Research/detrex/tree/main/projects/sqr_detr) codebase.\
 **2023.06** We fixed an [issue](https://github.com/Fangyi-Chen/SQR/issues/9#issue-1751787799) in the inference of SQR-Deformable DETR, which logically exists but does not impact the final results.\
 **2023.03** This work has been accepted by [CVPR 2023](https://cvpr2023.thecvf.com/).\
 **2023.03** The experiments and code on SQR-adamixer and SQR-Deformable DETR have been released.\
